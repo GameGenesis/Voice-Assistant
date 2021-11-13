@@ -17,8 +17,9 @@ voices = engine.getProperty("voices")
 engine.setProperty("voice", voices[1].id) #Use female voice
 
 #global values
-name = "Joan" #Voice assistant name
+name = "Riley" #Voice assistant name
 user_name = "" #User name
+prompt = False #Introduction prompt
 
 #Check if either of the commands are present in the voice data
 def command_exists(voice_data, terms):
@@ -97,8 +98,8 @@ def record_audio():
         return voice_data
 
 #Repsong to the user using tts based on the condition met for the voice command
-#Sequential specifies whether the assistant name must be said
-def respond(voice_data, sequential=False):    
+#Wakeup command specifies whether the assistant name must be said
+def respond(voice_data, wake_up_command=True):    
     voice_data = voice_data.lower()
     global user_name
 
@@ -110,7 +111,7 @@ def respond(voice_data, sequential=False):
         else:
             say_prompt(f"My name is {name}!")
     
-    elif name.lower() not in voice_data and not sequential:
+    elif name.lower() not in voice_data and wake_up_command:
         return
     
     elif command_exists(voice_data, "my name"):
@@ -207,7 +208,8 @@ def respond(voice_data, sequential=False):
     voice_data = ""
 
 #Run assistant
-name = prompt_user()
+if prompt:
+    name = prompt_user()
 while True:
     voice_data = record_audio()
     respond(voice_data, True)
