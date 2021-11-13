@@ -77,6 +77,9 @@ def respond(voice_data, sequential=False):
         say_prompt(f"Playing {song}")
         pywhatkit.playonyt(song)
 
+    if "time" in voice_data:
+        time = datetime.datetime.now().strftime("%I:%M %p")
+        say_prompt(f"The time is {time}")
 
 name = prompt_user()
 while True:
