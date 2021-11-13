@@ -20,12 +20,20 @@ engine.setProperty("voice", voices[1].id) #Use female voice
 name = "Joan" #Voice assistant name
 user_name = "" #User name
 
-def command_exists_or(voice_data, terms):
+#Check if either of the commands are present in the voice data
+def command_exists(voice_data, terms):
+    if type(terms) is str:
+        if terms in voice_data:
+            return True
+        else:
+            return False
     for term in terms:
         if term in voice_data:
             return True
+    return False
 
-def command_exists_and(voice_data, terms):
+#Check if all of the commands are present in the voice data
+def command_exists_all(voice_data, terms):
     for term in terms:
         if term not in voice_data:
             return False
@@ -94,7 +102,7 @@ def respond(voice_data, sequential=False):
     voice_data = voice_data.lower()
     global user_name
 
-    if command_exists_and(voice_data, ["what", "your name"]):
+    if command_exists_all(voice_data, ["what", "your name"]):
         if user_name == "":
             say_prompt(f"My name is {name}! What's yours?")
             user_name = record_audio()
@@ -105,7 +113,7 @@ def respond(voice_data, sequential=False):
     elif name.lower() not in voice_data and not sequential:
         return
     
-    elif "my name" in voice_data:
+    elif command_exists(voice_data, "my name"):
         if user_name == "":
             say_prompt(f"I don't know! What is it?")
             user_name = record_audio()
@@ -121,7 +129,7 @@ def respond(voice_data, sequential=False):
             else:
                 return
 
-    elif "play " in voice_data or "youtube " in voice_data or "video " in voice_data:
+    elif command_exists(voice_data, ["video ", "youtube ", "play "]):
         if "video " in voice_data:
             command_str = "video "
         elif "youtube " in voice_data:
@@ -134,11 +142,11 @@ def respond(voice_data, sequential=False):
         say_prompt(f"Playing {song}")
         play_yt(song)
 
-    elif "time" in voice_data:
+    elif command_exists(voice_data, "time"):
         time = datetime.datetime.now().strftime("%I:%M %p")
         say_prompt(f"The time is {time}")
 
-    elif ("who" in voice_data or "what" in voice_data or "when" in voice_data) and "your " not in voice_data:
+    elif command_exists(voice_data, ["who", "what", "when"]) and "your " not in voice_data:
         query = ""
         if "is " in voice_data:
             index_start = voice_data.find("is ") + len("is ")
@@ -177,18 +185,18 @@ def respond(voice_data, sequential=False):
             except wikipedia.PageError:
                 pass
 
-    elif "search" in voice_data or "google" in voice_data:
+    elif command_exists(voice_data, ["search ", "google "]):
         commands = ["search ", "google "]
         search_web(voice_data, commands)
 
-    elif "where " in voice_data or "location" in voice_data or "find" in voice_data:
+    elif command_exists(voice_data, ["find ", "where ", "location "]):
         commands = ["is ", "are ", "of ", "find ", "where ", "location "]
         find_location(voice_data, commands)
 
-    elif "joke" in voice_data:
+    elif command_exists(voice_data, "joke"):
         say_prompt(jokes.get_joke())
     
-    elif "exit" in voice_data:
+    elif command_exists(voice_data, "exit"):
         exit()
     
     else:
