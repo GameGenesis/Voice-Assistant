@@ -81,6 +81,45 @@ def respond(voice_data, sequential=False):
         time = datetime.datetime.now().strftime("%I:%M %p")
         say_prompt(f"The time is {time}")
 
+    if "who" in voice_data or "what" or "when" or "where":
+        query = ""
+        if "is " in voice_data:
+            index_start = voice_data.find("is ") + len("is ")
+            query = voice_data[index_start:]
+        elif "are " in voice_data:
+            index_start = voice_data.find("are ") + len("are ")
+            query = voice_data[index_start:]
+        elif "'s " in voice_data:
+            index_start = voice_data.find("'s ") + len("'s' ")
+            query = voice_data[index_start:]
+        if "was " in voice_data:
+            index_start = voice_data.find("was ") + len("was ")
+            query = voice_data[index_start:]
+        if "were " in voice_data:
+            index_start = voice_data.find("were ") + len("were ")
+            query = voice_data[index_start:]
+        elif "did " in voice_data:
+            index_start = voice_data.find("did ") + len("did ")
+            index_end = voice_data.find("happen")
+            query = voice_data[index_start:index_end]
+        elif "does " in voice_data:
+            index_start = voice_data.find("did ") + len("did ")
+            index_end = voice_data.find("happen")
+            query = voice_data[index_start:index_end]
+        
+        if query != "":
+            try:
+                try:
+                    info = wikipedia.summary(query, 1)
+                    say_prompt(info)
+                    print(wikipedia.page(query).url)
+                except:
+                    info = wikipedia.summary(wikipedia.suggest(query), 1)
+                    say_prompt(info)
+                    print(wikipedia.page(wikipedia.suggest(query)).url)
+            except wikipedia.PageError:
+                pass
+
 name = prompt_user()
 while True:
     voice_data = record_audio()
