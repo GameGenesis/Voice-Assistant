@@ -1,5 +1,3 @@
-from math import trunc
-from posixpath import commonpath
 import speech_recognition as sr
 import pyttsx3 as tts
 import pywhatkit
