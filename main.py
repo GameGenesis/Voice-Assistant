@@ -70,6 +70,13 @@ def respond(voice_data, sequential=False):
             else:
                 return
 
+    if "play" in voice_data:
+        command_str = "play "
+        index_start = voice_data.find(command_str) + len(command_str)
+        song = voice_data[index_start:]
+        say_prompt(f"Playing {song}")
+        pywhatkit.playonyt(song)
+
 
 name = prompt_user()
 while True:
