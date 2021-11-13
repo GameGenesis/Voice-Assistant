@@ -25,7 +25,7 @@ def play_yt(search_keyword: str):
     webbrowser.get().open(url)
 
 def search_web(voice_data, commands):
-    command_str = f"{commands[0]} " if commands[0] in voice_data else "{command_strs[1]} "
+    command_str = f"{commands[0]} " if commands[0] in voice_data else f"{commands[1]} "
     index_start = voice_data.find(command_str) + len(command_str)
     query = voice_data[index_start:]
     url = f"https://www.google.com/search?q={query}"
@@ -156,6 +156,9 @@ def respond(voice_data, sequential=False):
 
     if "joke" in voice_data:
         say_prompt(random.choice(jokes.jokes))
+    
+    if "exit" in voice_data:
+        exit()
 
 name = prompt_user()
 while True:
