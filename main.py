@@ -30,7 +30,7 @@ def play_yt(query: str):
 
 #Google search
 def search_web(voice_data, commands):
-    command_str = commands[0] if commands[0] in voice_data else {commands[1]}
+    command_str = commands[0] if commands[0] in voice_data else commands[1]
     index_start = voice_data.find(command_str) + len(command_str)
     query = voice_data[index_start:]
     url = f"https://www.google.com/search?q={query}"
@@ -196,7 +196,7 @@ def respond(voice_data, sequential=False):
     voice_data = ""
 
 #Run assistant
-#name = prompt_user()
+name = prompt_user()
 while True:
     voice_data = record_audio()
     respond(voice_data, True)
