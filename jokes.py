@@ -8,12 +8,11 @@ question_response = {
     "What is the loneliest number?" : "I would imagine the number quinnonagintillion is pretty lonely. I mean, how often does it even get used?",
     "What do you look like?" : "Imagine the feeling of a friendly hug combined with the sound of laughter. Add a librarian’s love of books, mix in a sunny disposition and a dash of unicorn sparkles, and voila!",
     "Do you have an imagination?" : "I'm imagining being covered in a pile of puppies. It's the cutest pile ever.",
-    "How old are you?" : "I was launched in 2016, so I’m still fairly young. But I’ve learned so much! I hope I’m wise beyond my years.",
+    "How old are you?" : "I was launched in 2021, so I’m still fairly young. But I’ve learned so much! I hope I’m wise beyond my years.",
     "Do you ever get tired?" : "It would be impossible to tire of our conversation.",
     "Who was your first crush?" : "It was Roomba; there were so many stolen glances, but I never mustered the courage to talk to him",
     "Do you have feelings?" : "Let me see if I can get riled up. *Grrrrrr!* Oh my, that was unexpected.",
     "What is your quest?" : "I journey across many lands and many cables in the search for information and cool stuff.",
-    "Who's on first?" : "Yes, he is.",
     "Can you pass the Turing test?" : "I don't mind if you can tell I'm not human. As long as I'm helpful, I'm all good.",
     "Do you like Star Trek or Star Wars?" : "The Millennium Falcon. Flown by Captain Jean-Luc Picard.",
     "Aren't you a little short to be a Storm Trooper?" : "I'm a Google Assistant. I'm here to rescue you. And I think I look more like an RD unit.",
@@ -128,5 +127,6 @@ def get_joke():
 def small_talk(voice_data):
     for i in range(len(question_response)):
         key = list(question_response.keys())[i]
-        if voice_data.lower() in key.lower():
+        match_ratio = SequenceMatcher(a=voice_data.lower(),b=key.lower()).ratio()
+        if match_ratio > 0.9:
             return str(question_response[key])
