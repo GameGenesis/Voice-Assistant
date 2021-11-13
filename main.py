@@ -18,9 +18,11 @@ name = "Joan"
 user_name = ""
 
 def playonyt(search_keyword: str):
+    search_keyword = search_keyword.replace(" ", "+")
     html = urllib.request.urlopen("https://www.youtube.com/results?search_query=" + search_keyword)
     video_ids = re.findall(r"watch\?v=(\S{11})", html.read().decode())
-    print("https://www.youtube.com/watch?v=" + video_ids[0])
+    url = f"https://www.youtube.com/watch?v={video_ids[0]}"
+    webbrowser.get().open(url)
 
 def say_prompt(prompt):
     print(prompt)
@@ -57,6 +59,14 @@ def respond(voice_data, sequential=False):
             say_prompt(f"Awesome! Nice to meet you {user_name}")
         else:
             say_prompt(f"My name is {name}!")
+
+    if "what" in voice_data and "your name" in voice_data:
+        if user_name == "":
+            say_prompt(f"My name is {name}! What's yours?")
+            user_name = record_audio()
+            say_prompt(f"Awesome! Nice to meet you {user_name}")
+        else:
+            say_prompt(f"My name is {name}!")
     
     if name.lower() not in voice_data and not sequential:
         return
@@ -77,12 +87,18 @@ def respond(voice_data, sequential=False):
             else:
                 return
 
-    if "play" in voice_data:
-        command_str = "play "
+    if "play " in voice_data or "youtube " in voice_data or "video " in voice_data:
+        if "video " in voice_data:
+            command_str = "video"
+        elif "youtube " in voice_data:
+            command_str = "play"
+        elif "play " in voice_data:
+            command_str = "play"
+
         index_start = voice_data.find(command_str) + len(command_str)
         song = voice_data[index_start:]
         say_prompt(f"Playing {song}")
-        pywhatkit.playonyt(song)
+        playonyt(song)
 
     if "time" in voice_data:
         time = datetime.datetime.now().strftime("%I:%M %p")
@@ -135,7 +151,7 @@ def respond(voice_data, sequential=False):
     if "joke" in voice_data:
         say_prompt(random.choice(jokes.jokes))
 
-name = prompt_user()
+#name = prompt_user()
 while True:
     voice_data = record_audio()
     respond(voice_data, True)
