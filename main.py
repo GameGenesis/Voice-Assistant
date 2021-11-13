@@ -4,6 +4,8 @@ import pywhatkit
 import webbrowser
 import wikipedia
 import datetime
+import urllib.request
+import re
 
 listener = sr.Recognizer()
 engine = tts.init()
@@ -12,6 +14,11 @@ engine.setProperty("voice", voices[1].id)
 
 name = "Joan"
 user_name = ""
+
+def playonyt(search_keyword: str):
+    html = urllib.request.urlopen("https://www.youtube.com/results?search_query=" + search_keyword)
+    video_ids = re.findall(r"watch\?v=(\S{11})", html.read().decode())
+    print("https://www.youtube.com/watch?v=" + video_ids[0])
 
 def say_prompt(prompt):
     print(prompt)
@@ -117,6 +124,11 @@ def respond(voice_data, sequential=False):
                     print(wikipedia.page(wikipedia.suggest(query)).url)
             except wikipedia.PageError:
                 pass
+
+    if "google" in voice_data or "search" in voice_data:
+        query = voice_data.replace("google ", "") if "google" in voice_data else voice_data.replace("search ", "")
+        url = f"https://www.google.com/search?q={query}"
+        webbrowser.get().open(url)
 
 name = prompt_user()
 while True:
