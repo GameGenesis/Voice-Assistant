@@ -54,10 +54,7 @@ def record_audio():
         print(voice_data)
         return voice_data
 
-def respond(voice_data, sequential=False):
-    if voice_data is None:
-        return
-    
+def respond(voice_data, sequential=False):    
     voice_data = voice_data.lower()
     global user_name
 
@@ -163,7 +160,9 @@ def respond(voice_data, sequential=False):
         exit()
     
     else:
-        say_prompt(jokes.small_talk(voice_data))
+        small_talk_response = jokes.small_talk(voice_data)
+        if small_talk_response is not None:
+            say_prompt(small_talk_response)
     
     voice_data = ""
 
