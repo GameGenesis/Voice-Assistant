@@ -17,11 +17,18 @@ engine.setProperty("voice", voices[1].id)
 name = "Joan"
 user_name = ""
 
-def playonyt(search_keyword: str):
+def play_yt(search_keyword: str):
     search_keyword = search_keyword.replace(" ", "+")
     html = urllib.request.urlopen("https://www.youtube.com/results?search_query=" + search_keyword)
     video_ids = re.findall(r"watch\?v=(\S{11})", html.read().decode())
     url = f"https://www.youtube.com/watch?v={video_ids[0]}"
+    webbrowser.get().open(url)
+
+def search_web(voice_data, commands):
+    command_str = f"{commands[0]} " if commands[0] in voice_data else "{command_strs[1]} "
+    index_start = voice_data.find(command_str) + len(command_str)
+    query = voice_data[index_start:]
+    url = f"https://www.google.com/search?q={query}"
     webbrowser.get().open(url)
 
 def say_prompt(prompt):
@@ -98,13 +105,13 @@ def respond(voice_data, sequential=False):
         index_start = voice_data.find(command_str) + len(command_str)
         song = voice_data[index_start:]
         say_prompt(f"Playing {song}")
-        playonyt(song)
+        play_yt(song)
 
     if "time" in voice_data:
         time = datetime.datetime.now().strftime("%I:%M %p")
         say_prompt(f"The time is {time}")
 
-    if "who" in voice_data or "what" or "when" or "where":
+    if "who" in voice_data or "what" in voice_data or "when" in voice_data or "where" in voice_data:
         query = ""
         if "is " in voice_data:
             index_start = voice_data.find("is ") + len("is ")
@@ -143,15 +150,14 @@ def respond(voice_data, sequential=False):
             except wikipedia.PageError:
                 pass
 
-    if "google" in voice_data or "search" in voice_data:
-        query = voice_data.replace("google ", "") if "google" in voice_data else voice_data.replace("search ", "")
-        url = f"https://www.google.com/search?q={query}"
-        webbrowser.get().open(url)
+    if "search" in voice_data or "google" in voice_data:
+        commands = ["search", "google"]
+        search_web(voice_data.lower(), commands)
 
     if "joke" in voice_data:
         say_prompt(random.choice(jokes.jokes))
 
-#name = prompt_user()
+name = prompt_user()
 while True:
     voice_data = record_audio()
     respond(voice_data, True)
