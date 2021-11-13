@@ -1,21 +1,26 @@
-import speech_recognition as sr
-import pyttsx3 as tts
-import webbrowser
-import wikipedia
-import datetime
-import urllib.request
-import re
+import speech_recognition as sr #Recognize user voice input
+import pyttsx3 as tts #Uses speech to text APIs
+import webbrowser #Open URLs in a web browser
+import wikipedia #Wikipedia Search
+import datetime #Date and time
+import urllib.request #URL handling
+import re #Regular expressions
 
-import jokes
+import jokes #Jokes file in project
 
+#Speech recognizer
 listener = sr.Recognizer()
+
+#text to speech initialization
 engine = tts.init()
 voices = engine.getProperty("voices")
-engine.setProperty("voice", voices[1].id)
+engine.setProperty("voice", voices[1].id) #Use female voice
 
-name = "Joan"
-user_name = ""
+#global values
+name = "Joan" #Voice assistant name
+user_name = "" #User name
 
+#Find most relevant (first) video on YouTube for the topic specified
 def play_yt(search_keyword: str):
     search_keyword = search_keyword.replace(" ", "+")
     html = urllib.request.urlopen("https://www.youtube.com/results?search_query=" + search_keyword)
@@ -23,6 +28,7 @@ def play_yt(search_keyword: str):
     url = f"https://www.youtube.com/watch?v={video_ids[0]}"
     webbrowser.get().open(url)
 
+#Google search
 def search_web(voice_data, commands):
     command_str = f"{commands[0]} " if commands[0] in voice_data else f"{commands[1]} "
     index_start = voice_data.find(command_str) + len(command_str)
@@ -30,17 +36,20 @@ def search_web(voice_data, commands):
     url = f"https://www.google.com/search?q={query}"
     webbrowser.get().open(url)
 
+#Text to speech implementation
 def say_prompt(prompt):
     print(prompt)
     engine.say(prompt)
     engine.runAndWait()
 
+#Introduction: Ask user for assistant name
 def prompt_user():
     say_prompt("Hi, I will be your new virtual assistant! What would you like to call me?")
     name = record_audio()
     say_prompt(f"{name} at your service!")
     return name
 
+#Get microphone audio and use google API to recognize speech
 def record_audio():
     with sr.Microphone() as source:
         print("Listening...")
@@ -54,6 +63,8 @@ def record_audio():
         print(voice_data)
         return voice_data
 
+#Repsong to the user using tts based on the condition met for the voice command
+#Sequential specifies whether the assistant name must be said
 def respond(voice_data, sequential=False):    
     voice_data = voice_data.lower()
     global user_name
@@ -166,6 +177,7 @@ def respond(voice_data, sequential=False):
     
     voice_data = ""
 
+#Run assistant
 name = prompt_user()
 while True:
     voice_data = record_audio()
