@@ -5,7 +5,6 @@ import wikipedia
 import datetime
 import urllib.request
 import re
-import random
 
 import jokes
 
@@ -56,6 +55,9 @@ def record_audio():
         return voice_data
 
 def respond(voice_data, sequential=False):
+    if voice_data is None:
+        return
+    
     voice_data = voice_data.lower()
     global user_name
 
@@ -155,10 +157,13 @@ def respond(voice_data, sequential=False):
         search_web(voice_data.lower(), commands)
 
     if "joke" in voice_data:
-        say_prompt(random.choice(jokes.jokes))
+        say_prompt(jokes.get_joke())
     
     if "exit" in voice_data:
         exit()
+    
+    say_prompt(jokes.small_talk(voice_data))
+    voice_data = ""
 
 name = prompt_user()
 while True:
