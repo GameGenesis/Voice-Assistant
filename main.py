@@ -1,7 +1,11 @@
+from math import trunc
+from posixpath import commonpath
 import speech_recognition as sr
 import pyttsx3 as tts
+import pywhatkit
 import webbrowser
-from time import ctime
+import wikipedia
+import datetime
 
 listener = sr.Recognizer()
 engine = tts.init()
@@ -17,22 +21,25 @@ def say_prompt(prompt):
     engine.runAndWait()
 
 def prompt_user():
-    say_prompt("Hi, I will be your new virtual assistent! What would you like to call me!")
+    say_prompt("Hi, I will be your new virtual assistant! What would you like to call me?")
     name = record_audio()
     say_prompt(f"{name} at your service!")
     return name
 
 def record_audio():
     with sr.Microphone() as source:
+        print("Listening...")
+        listener.adjust_for_ambient_noise(source)
         audio = listener.listen(source)
         voice_data = ""
         try:
             voice_data = listener.recognize_google(audio)
         except:
             pass
+        print(voice_data)
         return voice_data
 
-def respond(voice_data):
+def respond(voice_data, sequential=False):
     voice_data = voice_data.lower()
     global user_name
 
@@ -44,7 +51,7 @@ def respond(voice_data):
         else:
             say_prompt(f"My name is {name}!")
     
-    if name.lower() not in voice_data:
+    if name.lower() not in voice_data and not sequential:
         return
     
     if "my name" in voice_data:
@@ -63,8 +70,8 @@ def respond(voice_data):
             else:
                 return
 
-    
+
 name = prompt_user()
 while True:
     voice_data = record_audio()
-    respond(voice_data)
+    respond(voice_data, True)
