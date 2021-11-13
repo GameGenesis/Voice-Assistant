@@ -89,11 +89,11 @@ def respond(voice_data, sequential=False):
 
     if "play " in voice_data or "youtube " in voice_data or "video " in voice_data:
         if "video " in voice_data:
-            command_str = "video"
+            command_str = "video "
         elif "youtube " in voice_data:
-            command_str = "play"
+            command_str = "youtube "
         elif "play " in voice_data:
-            command_str = "play"
+            command_str = "play "
 
         index_start = voice_data.find(command_str) + len(command_str)
         song = voice_data[index_start:]
