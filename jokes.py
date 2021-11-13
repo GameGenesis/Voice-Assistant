@@ -130,5 +130,5 @@ def small_talk(voice_data):
     for i in range(len(question_response)):
         key = list(question_response.keys())[i]
         match_ratio = SequenceMatcher(a=voice_data.lower(),b=key.lower()).ratio()
-        if match_ratio > 0.9:
+        if match_ratio > 0.75:
             return str(question_response[key])
