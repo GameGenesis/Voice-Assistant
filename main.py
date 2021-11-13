@@ -5,7 +5,8 @@ import wikipedia #Wikipedia Search
 import datetime #Date and time
 import urllib.request #URL handling
 import re #Regular expressions
-
+from bs4 import BeautifulSoup
+import requests
 import jokes #Jokes file in project
 
 #Speech recognizer
@@ -43,7 +44,7 @@ def command_exists_all(voice_data, terms):
 #Find most relevant (first) video on YouTube for the topic specified
 def play_yt(query: str):
     query = query.replace(" ", "+")
-    html = urllib.request.urlopen("https://www.youtube.com/results?search_query=" + query)
+    html = urllib.request.urlopen(f"https://www.youtube.com/results?search_query={query}")
     video_ids = re.findall(r"watch\?v=(\S{11})", html.read().decode())
     url = f"https://www.youtube.com/watch?v={video_ids[0]}"
     webbrowser.get().open(url)
@@ -70,6 +71,38 @@ def find_location(voice_data, commands):
     webbrowser.get().open(url)
     say_prompt(f"Here's a map of {query}")
 
+def weather_data(voice_data, commands):
+    # enter city name
+    for c in commands:
+        if c in voice_data:
+            command_str = c
+            break
+    
+    index_start = voice_data.find(command_str) + len(command_str)
+    query = voice_data[index_start:]
+    query = query.replace(" ", "+")
+
+    # creating url and requests instance
+    url = f"https://www.google.com/search?q=weather+{query}"
+    html = requests.get(url).content
+
+    try:
+        # getting raw data
+        soup = BeautifulSoup(html, "html.parser")
+        temp = soup.find("div", attrs={"class": "BNeawe iBp4i AP7Wnd"}).text
+        str = soup.find('div', attrs={"class": "BNeawe tAd8D AP7Wnd"}).text
+
+        # formatting data
+        data = str.split("\n")
+        time = data[0]
+        sky = data[1]
+
+        # printing all data
+        say_prompt(f"The weather in {query} on {time} is {sky} with a temperature of {temp}.")
+    except:
+        say_prompt(f"Sorry, I could not find any weather data for {query}.")
+
+
 #Text to speech implementation
 def say_prompt(prompt):
     print(prompt)
@@ -94,7 +127,6 @@ def record_audio():
             voice_data = listener.recognize_google(audio)
         except:
             pass
-        print(voice_data)
         return voice_data
 
 #Repsong to the user using tts based on the condition met for the voice command
@@ -147,6 +179,18 @@ def respond(voice_data, wake_up_command=True):
         time = datetime.datetime.now().strftime("%I:%M %p")
         say_prompt(f"The time is {time}")
 
+    elif command_exists(voice_data, ["search ", "google "]):
+        commands = ["search ", "google "]
+        search_web(voice_data, commands)
+
+    elif command_exists(voice_data, ["find ", "where ", "location "]):
+        commands = ["is ", "are ", "of ", "find ", "where ", "location "]
+        find_location(voice_data, commands)
+    
+    elif command_exists(voice_data, ["weather ", "temperature ", "humidity "]):
+        commands = ["in ", "of ", "weather ", "temperature ", "humidity "]
+        weather_data(voice_data, commands)
+
     elif command_exists(voice_data, ["who", "what", "when"]) and "your " not in voice_data:
         query = ""
         if "is " in voice_data:
@@ -186,14 +230,6 @@ def respond(voice_data, wake_up_command=True):
             except wikipedia.PageError:
                 pass
 
-    elif command_exists(voice_data, ["search ", "google "]):
-        commands = ["search ", "google "]
-        search_web(voice_data, commands)
-
-    elif command_exists(voice_data, ["find ", "where ", "location "]):
-        commands = ["is ", "are ", "of ", "find ", "where ", "location "]
-        find_location(voice_data, commands)
-
     elif command_exists(voice_data, "joke"):
         say_prompt(jokes.get_joke())
     
@@ -212,4 +248,4 @@ if prompt:
     name = prompt_user()
 while True:
     voice_data = record_audio()
-    respond(voice_data, True)
+    respond(voice_data, False)
