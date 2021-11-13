@@ -20,6 +20,17 @@ engine.setProperty("voice", voices[1].id) #Use female voice
 name = "Joan" #Voice assistant name
 user_name = "" #User name
 
+def command_exists_or(voice_data, terms):
+    for term in terms:
+        if term in voice_data:
+            return True
+
+def command_exists_and(voice_data, terms):
+    for term in terms:
+        if term not in voice_data:
+            return False
+    return True
+
 #Find most relevant (first) video on YouTube for the topic specified
 def play_yt(query: str):
     query = query.replace(" ", "+")
@@ -83,15 +94,7 @@ def respond(voice_data, sequential=False):
     voice_data = voice_data.lower()
     global user_name
 
-    if "what" in voice_data and "your name" in voice_data:
-        if user_name == "":
-            say_prompt(f"My name is {name}! What's yours?")
-            user_name = record_audio()
-            say_prompt(f"Awesome! Nice to meet you {user_name}")
-        else:
-            say_prompt(f"My name is {name}!")
-
-    elif "what" in voice_data and "your name" in voice_data:
+    if command_exists_and(voice_data, ["what", "your name"]):
         if user_name == "":
             say_prompt(f"My name is {name}! What's yours?")
             user_name = record_audio()
