@@ -21,20 +21,34 @@ name = "Joan" #Voice assistant name
 user_name = "" #User name
 
 #Find most relevant (first) video on YouTube for the topic specified
-def play_yt(search_keyword: str):
-    search_keyword = search_keyword.replace(" ", "+")
-    html = urllib.request.urlopen("https://www.youtube.com/results?search_query=" + search_keyword)
+def play_yt(query: str):
+    query = query.replace(" ", "+")
+    html = urllib.request.urlopen("https://www.youtube.com/results?search_query=" + query)
     video_ids = re.findall(r"watch\?v=(\S{11})", html.read().decode())
     url = f"https://www.youtube.com/watch?v={video_ids[0]}"
     webbrowser.get().open(url)
 
 #Google search
 def search_web(voice_data, commands):
-    command_str = f"{commands[0]} " if commands[0] in voice_data else f"{commands[1]} "
+    command_str = commands[0] if commands[0] in voice_data else {commands[1]}
     index_start = voice_data.find(command_str) + len(command_str)
     query = voice_data[index_start:]
     url = f"https://www.google.com/search?q={query}"
     webbrowser.get().open(url)
+    say_prompt(f"Here's what I found for {query}")
+
+#Google Maps search
+def find_location(voice_data, commands):
+    for c in commands:
+        if c in voice_data:
+            command_str = c
+            break
+    
+    index_start = voice_data.find(command_str) + len(command_str)
+    query = voice_data[index_start:]
+    url = f"https://www.google.ca/maps/place/{query}"
+    webbrowser.get().open(url)
+    say_prompt(f"Here's a map of {query}")
 
 #Text to speech implementation
 def say_prompt(prompt):
@@ -121,7 +135,7 @@ def respond(voice_data, sequential=False):
         time = datetime.datetime.now().strftime("%I:%M %p")
         say_prompt(f"The time is {time}")
 
-    elif ("who" in voice_data or "what" in voice_data or "when" in voice_data or "where" in voice_data) and "your " not in voice_data:
+    elif ("who" in voice_data or "what" in voice_data or "when" in voice_data) and "your " not in voice_data:
         query = ""
         if "is " in voice_data:
             index_start = voice_data.find("is ") + len("is ")
@@ -161,8 +175,12 @@ def respond(voice_data, sequential=False):
                 pass
 
     elif "search" in voice_data or "google" in voice_data:
-        commands = ["search", "google"]
+        commands = ["search ", "google "]
         search_web(voice_data, commands)
+
+    elif "where " in voice_data or "location" in voice_data or "find" in voice_data:
+        commands = ["is ", "are ", "of ", "find ", "where ", "location "]
+        find_location(voice_data, commands)
 
     elif "joke" in voice_data:
         say_prompt(jokes.get_joke())
@@ -178,7 +196,7 @@ def respond(voice_data, sequential=False):
     voice_data = ""
 
 #Run assistant
-name = prompt_user()
+#name = prompt_user()
 while True:
     voice_data = record_audio()
     respond(voice_data, True)
