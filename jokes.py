@@ -1,4 +1,28 @@
-jokes = [
+import random
+from difflib import SequenceMatcher
+
+question_response = {
+    "Wherefore art thou Romeo?" : "Deny thy father and refuse thy name; or if thou wilt not, be but sworn my love and I'll no longer be an assistant.",
+    "You want the truth?" : "I'm not sure I can handle it.",
+    "What do you mean I'm funny?" : "Tommy, no, you got it all wrong.",
+    "What is the loneliest number?" : "I would imagine the number quinnonagintillion is pretty lonely. I mean, how often does it even get used?",
+    "What do you look like?" : "Imagine the feeling of a friendly hug combined with the sound of laughter. Add a librarian’s love of books, mix in a sunny disposition and a dash of unicorn sparkles, and voila!",
+    "Do you have an imagination?" : "I'm imagining being covered in a pile of puppies. It's the cutest pile ever.",
+    "How old are you?" : "I was launched in 2016, so I’m still fairly young. But I’ve learned so much! I hope I’m wise beyond my years.",
+    "Do you ever get tired?" : "It would be impossible to tire of our conversation.",
+    "Who was your first crush?" : "It was Roomba; there were so many stolen glances, but I never mustered the courage to talk to him",
+    "Do you have feelings?" : "Let me see if I can get riled up. *Grrrrrr!* Oh my, that was unexpected.",
+    "What is your quest?" : "I journey across many lands and many cables in the search for information and cool stuff.",
+    "Who's on first?" : "Yes, he is.",
+    "Can you pass the Turing test?" : "I don't mind if you can tell I'm not human. As long as I'm helpful, I'm all good.",
+    "Do you like Star Trek or Star Wars?" : "The Millennium Falcon. Flown by Captain Jean-Luc Picard.",
+    "Aren't you a little short to be a Storm Trooper?" : "I'm a Google Assistant. I'm here to rescue you. And I think I look more like an RD unit.",
+    "What's your vector, Victor?" : "We have clearance, Clarence.",
+    "Are you Skynet?" : "I'm glad I'm not. Skynet is more focused on extermination than helpfulness. It would make a terrible Assistant.",
+    "Do you know the Muffin Man?" : "The one who lives on Drury Lane? Yeah, nice guy.",
+}
+
+jokes_programming = [
     "Complaining about the lack of smoking shelters, the nicotine addicted Python programmers said there ought to be 'spaces for tabs'.",
     "Ubuntu users are apt to get this joke.",
     "Obfuscated Reality Mappers (ORMs) can be useful database tools.",
@@ -97,3 +121,12 @@ jokes = [
     "!false, (It's funny because it's true)",
     "['hip', 'hip'] (hip hip array!)",
 ]
+
+def get_joke():
+    return random.choice(jokes_programming)
+
+def small_talk(voice_data):
+    for i in range(len(question_response)):
+        key = list(question_response.keys())[i]
+        if voice_data.lower() in key.lower():
+            return str(question_response[key])
