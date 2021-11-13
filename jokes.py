@@ -121,9 +121,11 @@ jokes_programming = [
     "['hip', 'hip'] (hip hip array!)",
 ]
 
+#Get a random joke from the list of jokes
 def get_joke():
     return random.choice(jokes_programming)
 
+#Check if user speech command matches any of the small talk questions, and respond accordingly
 def small_talk(voice_data):
     for i in range(len(question_response)):
         key = list(question_response.keys())[i]
