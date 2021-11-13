@@ -1,6 +1,5 @@
 import speech_recognition as sr
 import pyttsx3 as tts
-import pywhatkit
 import webbrowser
 import wikipedia
 import datetime
