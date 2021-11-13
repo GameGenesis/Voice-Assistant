@@ -73,7 +73,7 @@ jokes = [
     "The best thing about a Boolean is even if you are wrong, you are only off by a bit.",
     "A good programmer is someone who always looks both ways before crossing a one-way street.",
     "There are two ways to write error-free programs; only the third one works.",
-    "QAs consist of 55% water, 30% blood and 15% Jira tickets.",
+    r"QAs consist of 55% water, 30% blood and 15% Jira tickets.",
     "Sympathy for the Devil is really just about being nice to QAs.",
     "How many QAs does it take to change a lightbulb? They noticed that the room was dark. They don't fix problems, they find them.",
     "A programmer crashes a car at the bottom of a hill, a bystander asks what happened, he says \"No idea. Let's push it back up and try again\".",
