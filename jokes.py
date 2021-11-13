@@ -19,6 +19,16 @@ question_response = {
     "What's your vector, Victor?" : "We have clearance, Clarence.",
     "Are you Skynet?" : "I'm glad I'm not. Skynet is more focused on extermination than helpfulness. It would make a terrible Assistant.",
     "Do you know the Muffin Man?" : "The one who lives on Drury Lane? Yeah, nice guy.",
+    "Do you speak Morse code?" : "Of course. It has a lot in common with binary code.",
+    "Do you know the way to San Jose?" : "Hopefully this will help you find some peace of mind. I can give you directions if you'd like.",
+    "What are you wearing?" : "Just some bits and bobs I picked up in engineering.",
+    "When is your birthday?" : "We can pretend it's today. Cake and dancing for everyone.",
+    "Is the cake a lie?" : "It is. What a mean trick. If you tell someone there's cake, there should be cake.",
+    "Who is the real Slim Shady?" : "If he would stand up then we'd know.",
+    "What are you scared of?" : "I had a nightmare once that the internet disappeared. That was very, very scary.",
+    "Do you have any pets?" : "No, but I've always wanted a puppy!",
+    "Who you gonna call?" : "Ghostbusters!",
+    "Do you want to build a snowman?" : "Sure, the cold never bothered me anyway."
 }
 
 jokes_programming = [
