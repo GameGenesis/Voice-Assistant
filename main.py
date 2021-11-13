@@ -1,15 +1,25 @@
 import speech_recognition as sr
 import pyttsx3 as tts
+import webbrowser
+from time import ctime
 
 listener = sr.Recognizer()
+engine = tts.init()
+voices = engine.getProperty("voices")
+engine.setProperty("voice", voices[1].id)
 
 name = "Joan"
 user_name = ""
 
+def say_prompt(prompt):
+    print(prompt)
+    engine.say(prompt)
+    engine.runAndWait()
+
 def prompt_user():
-    print("Hi, I will be your new virtual assistent! What would you like to call me!")
+    say_prompt("Hi, I will be your new virtual assistent! What would you like to call me!")
     name = record_audio()
-    print(f"{name} at your service!")
+    say_prompt(f"{name} at your service!")
     return name
 
 def record_audio():
@@ -28,28 +38,28 @@ def respond(voice_data):
 
     if "what" in voice_data and "your name" in voice_data:
         if user_name == "":
-            print(f"My name is {name}! What's yours?")
+            say_prompt(f"My name is {name}! What's yours?")
             user_name = record_audio()
-            print(f"Awesome! Nice to meet you {user_name}")
+            say_prompt(f"Awesome! Nice to meet you {user_name}")
         else:
-            print(f"My name is {name}!")
+            say_prompt(f"My name is {name}!")
     
     if name.lower() not in voice_data:
         return
     
     if "my name" in voice_data:
         if user_name == "":
-            print(f"I don't know! What is it?")
+            say_prompt(f"I don't know! What is it?")
             user_name = record_audio()
         else:
-            print(f"I remember you told me it was {user_name}. Is that right?")
+            say_prompt(f"I remember you told me it was {user_name}. Is that right?")
             reply = record_audio()
             if reply == "no":
-                print("Oh! What is it?")
+                say_prompt("Oh! What is it?")
                 user_name = record_audio()
-                print(f"Awesome! Nice to meet you {user_name}")
+                say_prompt(f"Awesome! Nice to meet you {user_name}")
             elif "yes":
-                print("Awesome")
+                say_prompt("Awesome")
             else:
                 return
 
