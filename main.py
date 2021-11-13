@@ -7,6 +7,7 @@ import urllib.request #URL handling
 import re #Regular expressions
 from bs4 import BeautifulSoup
 import requests
+
 import jokes #Jokes file in project
 
 #Speech recognizer
@@ -129,7 +130,7 @@ def record_audio():
             pass
         return voice_data
 
-#Repsong to the user using tts based on the condition met for the voice command
+#Respond to the user using tts based on the condition met for the voice command
 #Wakeup command specifies whether the assistant name must be said
 def respond(voice_data, wake_up_command=True):    
     voice_data = voice_data.lower()
