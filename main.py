@@ -6,6 +6,9 @@ import wikipedia
 import datetime
 import urllib.request
 import re
+import random
+
+import jokes
 
 listener = sr.Recognizer()
 engine = tts.init()
@@ -129,6 +132,9 @@ def respond(voice_data, sequential=False):
         query = voice_data.replace("google ", "") if "google" in voice_data else voice_data.replace("search ", "")
         url = f"https://www.google.com/search?q={query}"
         webbrowser.get().open(url)
+
+    if "joke" in voice_data:
+        say_prompt(random.choice(jokes.jokes))
 
 name = prompt_user()
 while True:
