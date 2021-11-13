@@ -69,7 +69,7 @@ def respond(voice_data, sequential=False):
         else:
             say_prompt(f"My name is {name}!")
 
-    if "what" in voice_data and "your name" in voice_data:
+    elif "what" in voice_data and "your name" in voice_data:
         if user_name == "":
             say_prompt(f"My name is {name}! What's yours?")
             user_name = record_audio()
@@ -77,10 +77,10 @@ def respond(voice_data, sequential=False):
         else:
             say_prompt(f"My name is {name}!")
     
-    if name.lower() not in voice_data and not sequential:
+    elif name.lower() not in voice_data and not sequential:
         return
     
-    if "my name" in voice_data:
+    elif "my name" in voice_data:
         if user_name == "":
             say_prompt(f"I don't know! What is it?")
             user_name = record_audio()
@@ -96,7 +96,7 @@ def respond(voice_data, sequential=False):
             else:
                 return
 
-    if "play " in voice_data or "youtube " in voice_data or "video " in voice_data:
+    elif "play " in voice_data or "youtube " in voice_data or "video " in voice_data:
         if "video " in voice_data:
             command_str = "video "
         elif "youtube " in voice_data:
@@ -109,11 +109,11 @@ def respond(voice_data, sequential=False):
         say_prompt(f"Playing {song}")
         play_yt(song)
 
-    if "time" in voice_data:
+    elif "time" in voice_data:
         time = datetime.datetime.now().strftime("%I:%M %p")
         say_prompt(f"The time is {time}")
 
-    if "who" in voice_data or "what" in voice_data or "when" in voice_data or "where" in voice_data:
+    elif ("who" in voice_data or "what" in voice_data or "when" in voice_data or "where" in voice_data) and "your " not in voice_data:
         query = ""
         if "is " in voice_data:
             index_start = voice_data.find("is ") + len("is ")
@@ -152,17 +152,19 @@ def respond(voice_data, sequential=False):
             except wikipedia.PageError:
                 pass
 
-    if "search" in voice_data or "google" in voice_data:
+    elif "search" in voice_data or "google" in voice_data:
         commands = ["search", "google"]
-        search_web(voice_data.lower(), commands)
+        search_web(voice_data, commands)
 
-    if "joke" in voice_data:
+    elif "joke" in voice_data:
         say_prompt(jokes.get_joke())
     
-    if "exit" in voice_data:
+    elif "exit" in voice_data:
         exit()
     
-    say_prompt(jokes.small_talk(voice_data))
+    else:
+        say_prompt(jokes.small_talk(voice_data))
+    
     voice_data = ""
 
 name = prompt_user()
