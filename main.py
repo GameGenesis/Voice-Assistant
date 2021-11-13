@@ -68,8 +68,10 @@ def find_location(voice_data, commands):
     
     index_start = voice_data.find(command_str) + len(command_str)
     query = voice_data[index_start:]
+
     url = f"https://www.google.ca/maps/place/{query}"
     webbrowser.get().open(url)
+
     say_prompt(f"Here's a map of {query}")
 
 def weather_data(voice_data, commands):
@@ -184,8 +186,8 @@ def respond(voice_data, wake_up_command=True):
         commands = ["search ", "google "]
         search_web(voice_data, commands)
 
-    elif command_exists(voice_data, ["find ", "where ", "location "]):
-        commands = ["is ", "are ", "of ", "find ", "where ", "location "]
+    elif command_exists(voice_data, ["find ", "where ", "location ", "nearby ", "map ", "locate "]):
+        commands = ["is ", "are ", "of ", "find ", "where ", "location ", "nearby ", "map ", "locate "]
         find_location(voice_data, commands)
     
     elif command_exists(voice_data, ["weather ", "temperature ", "humidity "]):
