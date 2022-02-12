@@ -194,7 +194,7 @@ def respond(voice_data, wake_up_command=True):
         commands = ["in ", "of ", "weather ", "temperature ", "humidity "]
         weather_data(voice_data, commands)
 
-    elif command_exists(voice_data, ["who", "what", "when"]) and command_exists_all(voice_data, ["you ", "your "]):
+    elif command_exists(voice_data, ["who", "what", "when"]) and command_exists_all(voice_data, ["you ", "your "]) == False:
         query = ""
         if "is " in voice_data:
             index_start = voice_data.find("is ") + len("is ")
